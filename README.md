@@ -37,19 +37,19 @@ pip install anls
 ```
 
 ## Preprocess Train Dataset
-### 1. Question Decomposition
+#### 1. Question Decomposition
 
     python question_decomposition.py
 
-### 2. Graph Construction
+#### 2. Graph Construction
 
     python generate_graph_llm.py
 
-### 3. Prerprocssing Graph
+#### 3. Prerprocssing Graph
 
     python preprocess_graph.py
 
-### 4. Get the Train Batch
+#### 4. Get the Train Batch
 
     python get_batch_size.py
 
