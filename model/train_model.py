@@ -52,10 +52,10 @@ class DynamicBatchDataset(IterableDataset):
 train = RetriveTrainGraphsDataset()
 test = RetriveTestGraphsDataset()
 
-with open('/root/Desktop/workspace/kwon/qg-rag/train_model/dataset/nationality/large/train/batch.txt', "r") as file:
+with open('dataset/graph/compasrion/train', "r") as file:
     train_batch_list = [int(line.strip()) for line in file if line.strip()]
 
-with open('/root/Desktop/workspace/kwon/qg-rag/train_model/dataset/nationality/large/test/batch.txt', "r") as file:
+with open('dataset/graph/compasrion/test', "r") as file:
     test_batch_list = [int(line.strip()) for line in file if line.strip()]
 
 train_dataset = DynamicBatchDataset(train, train_batch_list)
@@ -224,7 +224,7 @@ class GAT(torch.nn.Module):
                 if test_loss < LOSS_MIN:
                     print("***Update Model***")
                     LOSS_MIN = test_loss
-                    torch.save(self.state_dict(), f'/root/Desktop/workspace/kwon/qg-rag/train_model/model_weight/{args.expt_name}.pth')
+                    torch.save(self.state_dict(), f'model/model_weight/{args.expt_name}.pth')
  
     @torch.no_grad()
     def test(self, data):
@@ -277,7 +277,7 @@ def main(args):
 
     # Test
     gat_test = GAT(in_channels=3072, hidden_channels=hidden_dim, out_channels=out_dim, num_layers=4, dropout=0, num_heads=4).to(device)
-    gat_test.load_state_dict(torch.load(f'/root/Desktop/workspace/kwon/qg-rag/train_model/model_weight/{args.expt_name}.pth', weights_only=True,map_location=device))
+    gat_test.load_state_dict(torch.load(f'model/model_weight/{args.expt_name}.pth', weights_only=True,map_location=device))
     gat_test.test(test_loader)
 
 if __name__ == "__main__":

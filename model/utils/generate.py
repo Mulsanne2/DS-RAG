@@ -7,7 +7,7 @@ import pandas as pd
 from torch_geometric.data.data import Data
 import numpy as np
 
-os.environ["OPENAI_API_KEY"] = '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'
+os.environ["OPENAI_API_KEY"] = ''
 client = OpenAI()
 
 def get_embedding(text, model="text-embedding-3-large"):
