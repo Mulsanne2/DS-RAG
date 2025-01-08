@@ -53,10 +53,8 @@ pip install anls
     python train_model.py --gpu_device cuda:0 --expt_name comparison_GAT --hidden_dim 3072 --out_dim 1536 --weight_opt 5 --num_epochs 50 --batch_size 16 --lr 5e-6 --dropout 0.3 --seed 32
 
 ## Inference
+    #1 Generate vectorestore
+    python store.py
+    #2 QGS-RAG
+    python qgs_rag.py
 
-'''
-#1 Generate vectorestore
-python store.py
-#2 QGS-RAG
-python qgs_rag.py
-'''
