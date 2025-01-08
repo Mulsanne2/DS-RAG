@@ -1,5 +1,8 @@
 # QGS-RAG
 Repository of Question Graph Selection RAG (QGS-RAG)
+![MainFigure](https://github.com/user-attachments/assets/04fc54b6-fc35-4aea-9a4a-1e5ccd6ad5dc)
+
+
 
 ## Environment setup
 ```
