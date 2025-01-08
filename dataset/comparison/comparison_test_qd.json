@@ -1,0 +1,39 @@
+[{
+    "question": "Who's born date is the first earliest, among Neil Armstrong, who grew up in Wapakoneta, Ohio, where he developed a passion for aviation at a young age and became a pilot at 16, and was also involved in controversies regarding the authenticity of the moon landing and the public's perception of his achievements, and Taylor Swift?",
+    "question_d": [
+        "Who's born date is the first earliest",
+        "What is the born date of Neil Armstrong",
+        "Did Neil Armstrong grow up in Wapakoneta, Ohio",
+        "Did Neil Armstrong develop a passion for aviation at a young age",
+        "Did Neil Armstrong become a pilot at 16",
+        "Was Neil Armstrong involved in controversies regarding the authenticity of the moon landing",
+        "Was Neil Armstrong involved in controversies regarding the public's perception of his achievements",
+        "What is the born date of Taylor Swift"
+    ],
+    "gt_ans": "Neil Armstrong",
+    "gt_doc": [
+        "Armstrong was born on August 5, 1930.",
+        "Swift was born on December 13, 1989."
+    ]
+},
+{
+    "question": "Who's born date is the second earliest, among Neil Armstrong, who attended Purdue University on a Navy scholarship and earned a degree in aeronautical engineering, and later received a master's degree in aerospace engineering from the University of Southern California, Taylor Swift and Kylian Mbappe and Will Smith?",
+    "question_d": [
+        "Who's born date is the second earliest",
+        "What is the born date of Neil Armstrong",
+        "Did Neil Armstrong attend Purdue University on a Navy scholarship",
+        "Did Neil Armstrong earn a degree in aeronautical engineering",
+        "Did Neil Armstrong receive a master's degree in aerospace engineering from the University of Southern California",
+        "What is the born date of Taylor Swift",
+        "What is the born date of Kylian Mbappe",
+        "What is the born date of Will Smith"
+    ],
+    "gt_ans": "Will Smith",
+    "gt_doc": [
+        "Armstrong was born on August 5, 1930.",
+        "Mbappe was born on December 20, 1998.",
+        "Swift was born on December 13, 1989.",
+        "Smith was born on September 25, 1968."
+    ]
+}
+]

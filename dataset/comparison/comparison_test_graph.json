@@ -1,0 +1,226 @@
+[
+    {
+        "question": "Who's born date is the first earliest, among Neil Armstrong, who grew up in Wapakoneta, Ohio, where he developed a passion for aviation at a young age and became a pilot at 16, and was also involved in controversies regarding the authenticity of the moon landing and the public's perception of his achievements, and Taylor Swift?",
+        "question_d": [
+            "Who's born date is the first earliest",
+            "What is the born date of Neil Armstrong",
+            "Did Neil Armstrong grow up in Wapakoneta, Ohio",
+            "Did Neil Armstrong develop a passion for aviation at a young age",
+            "Did Neil Armstrong become a pilot at 16",
+            "Was Neil Armstrong involved in controversies regarding the authenticity of the moon landing",
+            "Was Neil Armstrong involved in controversies regarding the public's perception of his achievements",
+            "What is the born date of Taylor Swift"
+        ],
+        "gt_ans": "Neil Armstrong",
+        "gt_doc": [
+            "Armstrong was born on August 5, 1930.",
+            "Swift was born on December 13, 1989."
+        ],
+        "entities": [
+            "Neil Armstrong",
+            "born date",
+            "public's perception",
+            "Taylor Swift",
+            "What",
+            "controversies",
+            "first earliest",
+            "young age",
+            "16",
+            "achievements",
+            "aviation",
+            "pilot",
+            "Wapakoneta",
+            "Ohio",
+            "passion",
+            "authenticity",
+            "moon landing"
+        ],
+        "rener": [
+            {
+                "subject": "born date",
+                "relation": "Who 's",
+                "object": "first earliest"
+            },
+            {
+                "subject": "born date",
+                "relation": "of",
+                "object": "Neil Armstrong"
+            },
+            {
+                "subject": "born date",
+                "relation": "of",
+                "object": "Taylor Swift"
+            },
+            {
+                "subject": "What",
+                "relation": "is",
+                "object": "born date"
+            },
+            {
+                "subject": "Neil Armstrong",
+                "relation": "grow up in",
+                "object": "Wapakoneta"
+            },
+            {
+                "subject": "Neil Armstrong",
+                "relation": "develop",
+                "object": "passion"
+            },
+            {
+                "subject": "Neil Armstrong",
+                "relation": "become",
+                "object": "pilot"
+            },
+            {
+                "subject": "Neil Armstrong",
+                "relation": "at",
+                "object": "16"
+            },
+            {
+                "subject": "Neil Armstrong",
+                "relation": "involved in",
+                "object": "controversies"
+            },
+            {
+                "subject": "Wapakoneta",
+                "relation": "",
+                "object": "Ohio"
+            },
+            {
+                "subject": "passion",
+                "relation": "for",
+                "object": "aviation"
+            },
+            {
+                "subject": "passion",
+                "relation": "at",
+                "object": "young age"
+            },
+            {
+                "subject": "controversies",
+                "relation": "regarding",
+                "object": "authenticity"
+            },
+            {
+                "subject": "controversies",
+                "relation": "regarding",
+                "object": "public's perception"
+            },
+            {
+                "subject": "authenticity",
+                "relation": "of",
+                "object": "moon landing"
+            },
+            {
+                "subject": "public's perception",
+                "relation": "of his",
+                "object": "achievements"
+            }
+        ],
+        "core_node": "born date"
+    },
+    {
+        "question": "Who's born date is the second earliest, among Neil Armstrong, who attended Purdue University on a Navy scholarship and earned a degree in aeronautical engineering, and later received a master's degree in aerospace engineering from the University of Southern California, Taylor Swift and Kylian Mbappe and Will Smith?",
+        "question_d": [
+            "Who's born date is the second earliest",
+            "What is the born date of Neil Armstrong",
+            "Did Neil Armstrong attend Purdue University on a Navy scholarship",
+            "Did Neil Armstrong earn a degree in aeronautical engineering",
+            "Did Neil Armstrong receive a master's degree in aerospace engineering from the University of Southern California",
+            "What is the born date of Taylor Swift",
+            "What is the born date of Kylian Mbappe",
+            "What is the born date of Will Smith"
+        ],
+        "gt_ans": "Will Smith",
+        "gt_doc": [
+            "Armstrong was born on August 5, 1930.",
+            "Mbappe was born on December 20, 1998.",
+            "Swift was born on December 13, 1989.",
+            "Smith was born on September 25, 1968."
+        ],
+        "entities": [
+            "Neil Armstrong",
+            "Purdue University",
+            "Navy scholarship",
+            "born date",
+            "Taylor Swift",
+            "Will Smith",
+            "What",
+            "second earliest",
+            "master's degree",
+            "degree",
+            "Kylian Mbappe",
+            "aeronautical engineering",
+            "University of Southern California",
+            "aerospace engineering"
+        ],
+        "rener": [
+            {
+                "subject": "born date",
+                "relation": "Who 's",
+                "object": "second earliest"
+            },
+            {
+                "subject": "born date",
+                "relation": "of",
+                "object": "Neil Armstrong"
+            },
+            {
+                "subject": "born date",
+                "relation": "of",
+                "object": "Taylor Swift"
+            },
+            {
+                "subject": "born date",
+                "relation": "of",
+                "object": "Kylian Mbappe"
+            },
+            {
+                "subject": "born date",
+                "relation": "of",
+                "object": "Will Smith"
+            },
+            {
+                "subject": "What",
+                "relation": "is",
+                "object": "born date"
+            },
+            {
+                "subject": "Neil Armstrong",
+                "relation": "attend",
+                "object": "Purdue University"
+            },
+            {
+                "subject": "Neil Armstrong",
+                "relation": "earn",
+                "object": "degree"
+            },
+            {
+                "subject": "Neil Armstrong",
+                "relation": "receive",
+                "object": "master's degree"
+            },
+            {
+                "subject": "Purdue University",
+                "relation": "on",
+                "object": "Navy scholarship"
+            },
+            {
+                "subject": "degree",
+                "relation": "in",
+                "object": "aeronautical engineering"
+            },
+            {
+                "subject": "master's degree",
+                "relation": "in",
+                "object": "aerospace engineering"
+            },
+            {
+                "subject": "master's degree",
+                "relation": "from",
+                "object": "University of Southern California"
+            }
+        ],
+        "core_node": "born date"
+    }
+]
