@@ -1,7 +1,7 @@
 # DS-RAG: Enhancing Multi-Document Question-Answering for Commercial Applications
 This is the repo of our paper "Dynamic Selection based RAG System: Enhancing Multi-Document Question-Answering for Commercial Applications"
 
-We introduce the **DS-RAG** system, an effective approach for retrieving multi-documents to address complex questions. QGS-RAG identifies the core elements of a question through a Question Graph, allowing flexible selection of the necessary documents. DS leverages the strengths of Graph Attention Networks (GAT) to enhance graph-based reasoning and utilizes LLMs to provide tailored answers to users.
+We introduce the **DS-RAG** system, an effective approach for retrieving multi-documents to address complex questions. To ensure a comprehensive understanding of complex questions, the EPQD module segments the original query into smaller sub-questions, while the DICS module dynamically selects the most relevant information chunks based on defined selection criteria, leveraging graph and text embeddings for precise context construction. DS-RAG leverages the strengths of Graph Attention Networks (GAT) to enhance graph-based reasoning and utilizes LLMs to provide tailored answers to users.
 ![MainFigure](./images/ds_rag_architecture.jpeg)
 
 
