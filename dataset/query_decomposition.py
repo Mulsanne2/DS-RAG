@@ -22,13 +22,13 @@ def split_postprocess(split):
 def reductant_postproces(strings):
     original_strings_with_index = list(enumerate(strings))
     
-    # 소문자로 변환하여 작업
+    # Convert to lowercase for processing
     lowercase_strings_with_index = [(i, s.lower()) for i, s in original_strings_with_index]
     
-    # 길이순으로 정렬 (내림차순)
+    # Sort by length (descending order)
     lowercase_strings_with_index.sort(key=lambda x: len(x[1]), reverse=True)
     
-    # 중복 제거 및 가장 긴 문자열 선택
+    # Remove duplicates and select the longest string
     filtered_indices = set()
     seen = set()
     for index, string in lowercase_strings_with_index:
@@ -36,39 +36,39 @@ def reductant_postproces(strings):
             filtered_indices.add(index)
         seen.add(string)
     
-    # 원래 순서대로 복원
+    # Restore the original order
     result = [strings[i] for i in range(len(strings)) if i in filtered_indices]
     return result
 
 def split_sentence(text):
-    # 예외 처리할 접속사 패턴
+    # Exception patterns to handle specific conjunction cases
     exception_patterns = [
         r'\b(?:both|either|neither)\b.*?\b(?:and|or|nor)\b',
     ]
 
-    # 큰따옴표 내부의 내용을 보호하기 위해 콤마를 임시 치환
+    # Temporarily replace commas within double quotes
     text = re.sub(r'(".*?")', lambda match: match.group(0).replace(",", "_COMMA_"), text)
 
-    # 예외 패턴을 먼저 처리하여 접속사 뒤에 있는 것들은 쪼개지 않도록 함
+    # Process exception patterns to avoid splitting on conjunctions within the patterns
     for pattern in exception_patterns:
         text = re.sub(pattern, lambda match: match.group(0).replace(" ", "_EXCEPTION_"), text)
 
-    # 접속사 및 콤마 기준으로 분리
+    # Split based on conjunctions and commas
     conjunctions = r'\b(?:and|or|but|so|nor)\b'
     parts = re.split(fr'\s*(?:{conjunctions}|,)\s*', text)
 
-    # 예외 패턴에 대해서는 다시 복원
+    # Restore text for exception patterns
     parts = [part.replace("_COMMA_", ",").replace("_EXCEPTION_", " ") for part in parts]
 
-    # 후처리: 큰따옴표로 시작하는 부분을 만나고, 바로 앞에 콤마가 있는 경우만 병합
+    # Post-processing: Merge segments starting with a double quote if the previous segment ends with a comma
     merged_parts = []
     i = 0
     while i < len(parts):
         part = parts[i].strip()
 
-        # 큰따옴표로 시작하는 세션을 만났을 때
+        # If a segment starts with a double quote
         if part.startswith('"') and merged_parts and merged_parts[-1].endswith(","):
-            # 앞의 세션과 병합
+            # Merge with the previous segment
             merged_parts[-1] = merged_parts[-1].strip() + " " + part
         else:
             merged_parts.append(part)
@@ -112,7 +112,6 @@ Seperated Parts: ['Is nationality of Neil Armstrong', 'who grew up in Wapakoneta
 - subqeury: What is nationality of Kylian Mbappe?
 """
 
-# 서브쿼리 생성 프롬프트
 def generate_subqueries2(original_query, split_results):
     prompt = f"""
 Original Query: "{original_query}"
@@ -125,11 +124,9 @@ Don't say anything other than the format that starts with this form (- subquery:
 """
     return prompt
 
-# LLM 호출 예시
 def subquestion(original_query):
     split_temp = split_sentence(original_query)
     split_results = split_postprocess(split_temp)
-    #만약 split되지 않을 경우 원본 query넘기기
     if len(split_temp) == 1:
         return [original_query]
     prompt = generate_subqueries2(original_query, split_results)
@@ -143,7 +140,6 @@ def subquestion(original_query):
         temperature=0
     )
 
-    # 각 서브쿼리의 앞에 있는 "subquery:"와 "-"를 제거하고 리스트로 반환
     subqueries = [
         query.replace("- subquery: ", "").replace("?", "").strip()
         for query in response.choices[0].message.content.splitlines() if query.strip()
@@ -151,7 +147,6 @@ def subquestion(original_query):
     subqueries = reductant_postproces(subqueries)
     return subqueries
 
-# JSON 데이터 처리 함수
 def process_json_entry(data, output_file):
     with open(output_file, 'w', encoding='utf-8') as file:
         file.write('[') 

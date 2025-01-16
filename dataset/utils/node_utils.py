@@ -170,8 +170,8 @@ def get_entities_luke(query):
   logits = outputs.logits
 
   # Predict the entity labels with the highest probability
-  predicted_class_indices = torch.argmax(logits, dim=-1)  # 각 엔터티에 대해 가장 높은 확률의 클래스 인덱스
-  entity_labels = [model.config.id2label[idx.item()] for idx in predicted_class_indices.flatten()]  # 텐서를 평탄화 후 처리
+  predicted_class_indices = torch.argmax(logits, dim=-1)  # The class index with the highest probability for each entity
+  entity_labels = [model.config.id2label[idx.item()] for idx in predicted_class_indices.flatten()]  # Flatten the tensor and map indices to labels
 
   filtered_entities = [
     query[span[0]:span[1]]

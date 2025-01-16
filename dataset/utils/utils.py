@@ -78,13 +78,13 @@ def compose_entity_dict(entities, question):
             if len(entity) == 0:
                 continue
             if question[i:i+len(entity)].lower() == entity.lower() and len(entity) > 0:
-                # 매칭되는 엔티티를 발견하면 번호를 매기고 dict에 추가
+                # If a matching entity is found, assign a number and add it to the dict
                 entity_dict[f"e{entity_num}"] = entity
                 entity_num += 1
-                i += len(entity)  # 매칭된 엔티티 길이만큼 인덱스 건너뛰기
+                i += len(entity)  # Skip the index by the length of the matched entity
                 found = True
                 break
-        # 매칭이 없으면 다음 문자로 이동
+        # If no match is found, move to the next character
         if not found:
             i += 1
 
@@ -92,13 +92,13 @@ def compose_entity_dict(entities, question):
 
 def compose_entity_dict_v2(entities, question):
     """
-    문장을 token 단위로 분리
-    entity도 token 단위로 분리
-    문장의 첫 번째 토큰으로 시작하는 entity 찾기
-    찾은 entity들이 문장의 다음 토큰과도 일치하는지 확인
-    제일 많이 일치하는 entity를 첫 번째로 저장
-    다음으로 문장의 두 번째 토큰으로 시작하는 entity 찾기
-    이 과정 반복
+    Split the sentence into tokens
+    Split entities into tokens as well
+    Find entities that start with the first token of the sentence
+    Check if the found entities match the subsequent tokens of the sentence
+    Store the entity with the most matches first
+    Next, find entities that start with the second token of the sentence
+    Repeat this process
     """
     entity_dict = {}
     question_tokens = question.split()
@@ -124,7 +124,6 @@ def compose_entity_dict_v2(entities, question):
                 # Append the match details
                 if match_length == len(entity_tok):  # Full match
                     def first_last_clean(token):
-                        # 맨 앞과 맨 뒤의 특수문자와 공백 제거
                         return re.sub(r"^[^\w]+|[^\w]+$", "", token).strip()
                     matched_entities.append((first_last_clean(entity), i, match_length))
     
@@ -194,51 +193,51 @@ def find_best_match(new_entity, unique_entities, similarity_threshold=80):
         if new_entity in existing_entity or existing_entity in new_entity:
             included_entities.append(existing_entity)
 
-    # 1. 동일한 엔티티가 있으면 그걸 반환
+    # 1. If there is an identical entity, return it
     if new_entity in unique_entities:
         return new_entity
 
-    # 2. 여러 개에 포함되면 독립적으로 취급 (None 반환)
+    # 2. If it is included in multiple entities, treat it independently (return None)
     if len(included_entities) > 1:
         return None
 
-    # 3. 하나에만 포함되면 그 포함된 엔티티 반환
+    # 3. If it is included in only one entity, return the included entity
     if len(included_entities) == 1:
         return included_entities[0]
     
     for existing_entity in unique_entities:
       similarity = fuzz.ratio(new_entity, existing_entity)
       if similarity >= similarity_threshold:
-          return existing_entity  # 유사한 엔티티 반환
+          return existing_entity  # Return a similar entity
       
-    return None  # 매칭되지 않음
+    return None  # No match found
 
 def find_best_match_with_original(new_entity, unique_entities, similarity_threshold=80):
-    included_entities = []  # 포함된 엔티티를 저장할 리스트
+    included_entities = []  # List to store included entities
 
     for existing_entity in unique_entities:
-        # new_entity가 existing_entity에 포함되거나 그 반대인 경우 저장
+        # If new_entity is included in existing_entity or vice versa, add to the list
         if new_entity in existing_entity or existing_entity in new_entity:
             included_entities.append(existing_entity)
 
-    # 1. 동일한 엔티티가 있으면 그걸 반환
+    # 1. If there is an identical entity, return it
     if new_entity in unique_entities:
         return new_entity
 
-    # 2. 여러 개에 포함되면 독립적으로 취급 (None 반환)
+    # 2. If it is included in multiple entities, treat it independently (return None)
     if len(included_entities) > 1:
         return None
 
-    # 3. 하나에만 포함되면 그 포함된 엔티티 반환
+    # 3. If it is included in only one entity, return the included entity
     if len(included_entities) == 1:
         return included_entities[0]
     
     for existing_entity in unique_entities:
       similarity = fuzz.ratio(new_entity, existing_entity)
       if similarity >= similarity_threshold:
-          return existing_entity  # 유사한 엔티티 반환
+          return existing_entity  # Return a similar entity
       
-    return None  # 매칭되지 않음
+    return None  # No match found
 
 from collections import defaultdict
 
@@ -252,7 +251,7 @@ def compose_graph(tripleset_store, node_attributes):
     node_attributes = dict(
         sorted(
             node_attributes.items(),
-            key=lambda item: min(x[1] for x in item[1])  # 각 그룹의 최소 sub_query_number를 기준으로 정렬
+            key=lambda item: min(x[1] for x in item[1])  # Sort based on the minimum sub_query_number of each group
         )
     )
 
@@ -273,7 +272,7 @@ def compose_graph(tripleset_store, node_attributes):
 
 
     weakly_connected = list(nx.weakly_connected_components(G))
-    if not weakly_connected:  # 약 연결 구성 요소가 없을 경우
+    if not weakly_connected: 
         return None
 
     subgraph_node_counts = {i: len(sg) for i, sg in enumerate(weakly_connected)}
@@ -295,11 +294,11 @@ def compose_graph(tripleset_store, node_attributes):
                 for sn in subgraph_nodes:
                     sn_sub_query_info = {sq: nid for nid, sq in node_attributes[sn]}
 
-                    # 동일한 sub_query_number인지 확인
+                    # Check if the sub_query_numbers are the same
                     common_sub_query_numbers = ln_sub_query_info.keys() & sn_sub_query_info.keys()
                     
                     if common_sub_query_numbers:
-                        # 더 작은 sub_query_number부터 처리
+                        # Process from the smallest sub_query_number
                         for sq in sorted(common_sub_query_numbers):
                             ln_id = ln_sub_query_info[sq]
                             sn_id = sn_sub_query_info[sq]
@@ -322,8 +321,6 @@ def compose_graph(tripleset_store, node_attributes):
             n for n in subgraph_nodes
             if n in valid_subject_nodes
         ]
-
-        # 더 작은 subquery number를 가지고있는 n순서로 정렬 
 
         # Find the node in largest_subgraph_nodes to connect
         closest_pair = find_closest_node(largest_subgraph_nodes, filtered_nodes)

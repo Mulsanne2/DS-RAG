@@ -107,7 +107,6 @@ def extract_text_between_entities(sentence, entities):
     start_idx = 0  # start index for start matching
     
     for i in range(len(entities) - 1):
-        # 엔터티 간 텍스트를 추출하는 정규표현식
         pattern = re.escape(entities[i].lower()) + r"(.*?)" + re.escape(entities[i + 1].lower())
         
         # pattern matchin with start index

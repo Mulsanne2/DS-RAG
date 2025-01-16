@@ -102,8 +102,6 @@ def step_two(relations,documents,cores, cores_onehop):
             edge_index = torch.LongTensor([edges.src, edges.dst])
             node_weight = nodes.node_weight.tolist()
 
-            # core_onehop = get_destinations(core_node_idx, edge_index)
-
             data = Data(x=x,
                         edge_index=edge_index, 
                         node_weight = node_weight,
