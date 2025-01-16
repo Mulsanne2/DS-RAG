@@ -1,7 +1,7 @@
-# DS-RAG
-Repository of Dynmaic (DS-RAG)
+# DS-RAG: Enhancing Multi-Document Question-Answering for Commercial Applications
+This is the repo of our paper "Dynamic Selection based RAG System: Enhancing Multi-Document Question-Answering for Commercial Applications"
 
-We introduce the **QGS-RAG** system, an effective approach for retrieving multi-documents to address complex questions. QGS-RAG identifies the core elements of a question through a Question Graph, allowing flexible selection of the necessary documents. QGS leverages the strengths of Graph Attention Networks (GAT) to enhance graph-based reasoning and utilizes LLMs to provide tailored answers to users.
+We introduce the **DS-RAG** system, an effective approach for retrieving multi-documents to address complex questions. QGS-RAG identifies the core elements of a question through a Question Graph, allowing flexible selection of the necessary documents. DS leverages the strengths of Graph Attention Networks (GAT) to enhance graph-based reasoning and utilizes LLMs to provide tailored answers to users.
 ![MainFigure](https://github.com/user-attachments/assets/04fc54b6-fc35-4aea-9a4a-1e5ccd6ad5dc)
 
 
