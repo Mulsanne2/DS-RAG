@@ -1,6 +1,6 @@
 import json
 
-with open('comparison/comparison_train_graph.json', 'r', encoding='utf-8') as f:
+with open('rankingqa/rankingqa_train_graph.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
 
 TOTAL= 0

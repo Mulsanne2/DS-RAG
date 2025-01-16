@@ -9,7 +9,6 @@ from utils.train_retriever_graphs import RetriveTrainGraphsDataset
 from utils.test_retriever_graphs import RetriveTestGraphsDataset
 from utils.collate import collate_fn
 from utils.config import parse_args_GR
-from torch_scatter import scatter
 from tqdm import tqdm
 import torch.nn as nn
 import wandb
@@ -52,10 +51,10 @@ class DynamicBatchDataset(IterableDataset):
 train = RetriveTrainGraphsDataset()
 test = RetriveTestGraphsDataset()
 
-with open('dataset/graph/compasrion/train', "r") as file:
+with open('dataset/graph/rankingqa/train', "r") as file:
     train_batch_list = [int(line.strip()) for line in file if line.strip()]
 
-with open('dataset/graph/compasrion/test', "r") as file:
+with open('dataset/graph/rankingqa/test', "r") as file:
     test_batch_list = [int(line.strip()) for line in file if line.strip()]
 
 train_dataset = DynamicBatchDataset(train, train_batch_list)

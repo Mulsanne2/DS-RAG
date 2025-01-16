@@ -12,11 +12,9 @@ from utils.triple_store import TripleStore
 from collections import defaultdict
 
 
-# question, question_d, gt_doc, gt_ans가 존재하는 decomposed query의 json 파일
-decomposed_query_file_path = 'comparison/comparison_test_qd.json'
+decomposed_query_file_path = 'rankingqa/rankingqa_test_qd.json'
 
-# 그래프 및 core_node, 그 외 정보들을 저장하는 json 파일 경로
-save_path = "comparison/comparison_test_graph.json"
+save_path = "rankingqa/rankingqa_test_graph.json"
 
 
 

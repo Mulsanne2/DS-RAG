@@ -14,7 +14,7 @@ os.environ['OPENAI_API_KEY'] = ""
 client = OpenAI()
 
 path = 'graph/compasrion/train'
-test_data_path = 'comparison/comparison_train_graph.json'
+test_data_path = 'rankingqa/rankingqa_train_graph.json'
 
 def get_embedding(text, model="text-embedding-3-large"):
    text = text.replace("\n", " ")

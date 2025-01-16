@@ -89,18 +89,11 @@ def get_entities_load(file_path, query):
 
   for entry in data:
     question = entry.get("question", "")
-    if question == query:  # query와 question 비교
+    if question == query: 
         entities = entry.get("rener", {}).get("entities", [])
         return '\t'.join(entities)
     
   return ""
-
-  
-  
-
-
-
-
 
 spacy_model = os.getenv("spacy_model")
 nlp = spacy.load(spacy_model)
@@ -121,28 +114,26 @@ def get_entities_spacy(query):
   remove_pos = {"CONJ", "CCONJ", "INTJ", "SCONJ"}
   remove_dep = {"PRECONJ", "MARK", "CC", "INTJ", "EXPL"}
 
-  # middle_pos = {"AUX", "PART", "VERB"}
-
-  entities = []  # 최종 엔티티 목록
-  current_entity = []  # 현재 연결 중인 엔티티
+  entities = []  # final enitity list
+  current_entity = []  # connecting entity
   
   for token in doc:
     pos, dep = token.pos_, token.dep_
     pos = pos.upper()
     dep = dep.upper()
 
-    # 제거 조건에 해당하는 토큰은 무시
+    # check tokens
     if pos in remove_pos or dep in remove_dep:
         if current_entity:
             entities.append(" ".join(current_entity))
             current_entity = []
         continue
 
-    # 연결 조건에 해당하는 토큰을 현재 엔티티에 추가
+    # Add tokens corresponding to connection conditions to the current entity
     if (pos in valid_pos or dep in valid_dep):
         current_entity.append(token.text)
     else:
-        # 연결 조건을 벗어나면 현재 엔티티를 저장하고 새로 시작
+        # If the connection conditions are not met, save the current entity and start a new one.
         if current_entity:
             entities.append(" ".join(current_entity))
             current_entity = []
@@ -152,62 +143,52 @@ def get_entities_spacy(query):
 
   return entities
 
-
-# def get_entities_model(query):
-
-
 from transformers import LukeTokenizer, LukeForEntitySpanClassification
 import spacy
 import torch
 
 def get_entities_luke(query):
 
-  # 모델 및 토크나이저 로드
+  # load model and tokenizer
   model_name = "studio-ousia/luke-large-finetuned-conll-2003"
   tokenizer = LukeTokenizer.from_pretrained(model_name)
   model = LukeForEntitySpanClassification.from_pretrained(model_name)
 
-  # SpaCy 모델 로드 (언어 모델에 따라 다르게 설정 가능)
-  nlp = spacy.load("en_core_web_trf")  # 영어 텍스트용 SpaCy 모델
+  # load SpaCy model
+  nlp = spacy.load("en_core_web_trf") 
 
-  # SpaCy로 엔터티 스팬 추출
   doc = nlp(query)
   entity_spans = [(ent.start_char, ent.end_char) for ent in doc.ents]
 
   if not entity_spans:
       return []
 
-  # 토크나이저로 입력 변환
   inputs = tokenizer(query, entity_spans=entity_spans, return_tensors="pt")
 
-  # 모델 추론
+  # infernece model
   outputs = model(**inputs)
   logits = outputs.logits
 
-  # 가장 높은 확률의 엔터티 라벨 예측
+  # Predict the entity labels with the highest probability
   predicted_class_indices = torch.argmax(logits, dim=-1)  # 각 엔터티에 대해 가장 높은 확률의 클래스 인덱스
   entity_labels = [model.config.id2label[idx.item()] for idx in predicted_class_indices.flatten()]  # 텐서를 평탄화 후 처리
-
-  # 결과 출력
-  # for span, label in zip(entity_spans, entity_labels):
-  #     print(f"Entity: {query[span[0]:span[1]]}, Label: {label}")
 
   filtered_entities = [
     query[span[0]:span[1]]
     for span, label in zip(entity_spans, entity_labels)
-    if label != "O"  # 'O'는 'Outside'로, 라벨이 없는 경우를 나타냄
+    if label != "O"  # 'O' indicates 'Outside', meaning no label is assigned
   ]
 
   return filtered_entities
 
 
 def get_entities_spacy_ner(query):
-  nlp = spacy.load("en_core_web_trf")  # 영어 모델 사용
+  nlp = spacy.load("en_core_web_trf")  # Load the English model
 
-  # 텍스트 분석
+  # Analyze the text
   doc = nlp(query)
 
-  # 엔터티 추출 (중복 제거)
+  # Extract entities (removing duplicates)
   entities = list(set(ent.text for ent in doc.ents))
 
   return entities

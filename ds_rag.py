@@ -11,16 +11,16 @@ SELECT_NUM = 5
 num_queries = [0 for i in range(5)] #check number of each sub-queries in experiments
 
 #< 1.  set directory >#
-test_data_path = 'dataset/comparison/comparison_test_graph.json'
+test_data_path = 'dataset/rankingqa/rankingqa_test_graph.json'
 vectorspace_path = 'dataset/vectorstore/multisourceqa'
-outdir = 'result_log/comparison'
+outdir = 'result_log/rankingqa'
 output_file_path = f"{outdir}/test"
 os.makedirs(f'{outdir}', exist_ok=True)
 total_file = open(f"{output_file_path}_total.txt", 'w')
 
 #< 2. Set LLM and Prompt >#
 """
-Prompt for common dataset
+Prompt for comparisonqa dataset
 """
 # template = """You are an assistant for question-answering tasks.
 # Use the following pieces of retrieved context to answer the question.
@@ -32,7 +32,7 @@ Prompt for common dataset
 # """
 
 """
-Prompt for comparison dataset
+Prompt for rankingqa dataset
 """
 template = """You are an assistant for question-answering tasks.
 Use the following pieces of retrieved context to answer the question.
@@ -145,7 +145,7 @@ class GAT(torch.nn.Module):
 # Load Model Parameter
 
 gat1 = GAT(in_channels=3072, hidden_channels=3072, out_channels=1536, num_layers=4, dropout=0, num_heads=4).to(device)
-gat1.load_state_dict(torch.load('model/model_weight/comparison_GAT.pth', weights_only=True, map_location='cuda:0'))
+gat1.load_state_dict(torch.load('model/model_weight/rankingqa_GAT.pth', weights_only=True, map_location='cuda:0'))
 
 #< 4. Set RAG >#
 # Set RAG Sytem
@@ -245,7 +245,7 @@ def preprocess_gold_item(gold_item):
     percentage = 1.0
     length = len(gold_item)
 
-    # 앞뒤 15%를 제거한 버전
+    # with the first and last 15% removed.
     start_percentage = 1-percentage
     start_half = start_percentage/2
     end_half = 1-start_half
@@ -382,23 +382,23 @@ def show_result(RESULT_SCORE, expt, idx):
     return EXPT_HIT3, EXPT_HIT5, EXPT_MAP5, EXPT_MRR5, EXPT_PREC, EXPT_COV, EXPT_ANLS, EXPT_INTER, EXPT_EM
 
 def get_descendants(edge_index, start_node):
-    # 시작 노드를 탐색하기 위한 큐와 방문 여부를 저장
+    # Initialize a queue for traversing from the start node and a set to track visited nodes
     visited = set()
     queue = [start_node]
     descendants = []
 
-    # 그래프 탐색
+    # Graph traversal
     while queue:
-        current = queue.pop(0)  # 큐에서 노드 하나 꺼냄
+        current = queue.pop(0)  # Dequeue a node from the queue
         if current not in visited:
             visited.add(current)
             descendants.append(current)
 
-            # edge_index에서 current를 source로 가지는 모든 destination 노드를 찾음
-            mask = edge_index[0] == current  # source가 current인 부분만 필터링
+            # Find all destination nodes in edge_index where the current node is the source
+            mask = edge_index[0] == current  # Filter where the source matches the current node
             children = edge_index[1][mask]
 
-            # 큐에 자식 노드 추가
+            # Add the child nodes to the queue
             queue.extend(children.tolist())
 
     return descendants
@@ -462,7 +462,7 @@ def rag_architecture_GS_S(i, question, ques_graph, documents, Doc_emb, gat, GS_o
     sorted_documents = []
 
     core_node = ques_graph.core_node
-    #만약 core node가 없는 경우
+    # if it doens't have core node
     if core_node == -1:
         return rag_architecture_GS(i, question, ques_graph, documents, Doc_emb, gat, GS_opt, select_num)
 
@@ -475,7 +475,7 @@ def rag_architecture_GS_S(i, question, ques_graph, documents, Doc_emb, gat, GS_o
 
     #모든 onehop-core에 대해 Node에 대해 가장 잘 맞는 한가지를 찾는다.
     if GS_opt==5:
-        #모든 노드에 대해서 반복
+        # For each one-hop core, find the single best match for the node.
         for one_hop in one_hops:
             one_hop = [one_hop.item()]
 
@@ -487,7 +487,7 @@ def rag_architecture_GS_S(i, question, ques_graph, documents, Doc_emb, gat, GS_o
             sorted_documents.append(sorted_documents_temp[0])
     
     elif GS_opt==6:
-        #모든 노드에 대해서 반복
+        # For each one-hop core, find the single best match for the node.
         for one_hop in one_hops:
             one_hop = get_descendants(ques_graph.edge_index, one_hop.item())
 

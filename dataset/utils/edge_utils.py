@@ -84,10 +84,10 @@ def extract_text_between_entities(sentence, entities):
 
     lower_sentence = sentence.lower()
 
-    # 결과를 저장할 리스트
+    # list to store result
     extracted_texts = []
 
-    # 문장의 시작과 첫번째 엔티티
+    # start sentence and start entity
     if entities:
         first_entity = entities[0].lower()
         start_pattern = r"^(.*?)" + re.escape(first_entity)
@@ -104,16 +104,13 @@ def extract_text_between_entities(sentence, entities):
             if filtered_start:
                 extracted_texts.append(" ".join(filtered_start))
 
-    start_idx = 0  # 매칭을 시작할 시작 인덱스
+    start_idx = 0  # start index for start matching
     
     for i in range(len(entities) - 1):
         # 엔터티 간 텍스트를 추출하는 정규표현식
         pattern = re.escape(entities[i].lower()) + r"(.*?)" + re.escape(entities[i + 1].lower())
-
-        # 맨 앞, 맨 뒤도 추가
-
         
-        # 시작 인덱스를 기준으로 패턴 매칭
+        # pattern matchin with start index
         match = re.search(pattern, lower_sentence[start_idx:])
         
         if match:
@@ -121,7 +118,7 @@ def extract_text_between_entities(sentence, entities):
             start_idx_in_match = match.start(1)
             end_idx_in_match = match.end(1)
             
-            # 매칭된 텍스트 앞 공백 처리
+            # process space
             leading_spaces = len(match_text) - len(match_text.lstrip())
             adjusted_start_idx = start_idx + start_idx_in_match + leading_spaces
             adjusted_end_idx = start_idx + end_idx_in_match
@@ -131,40 +128,20 @@ def extract_text_between_entities(sentence, entities):
                 if adjusted_start_idx <= idx < adjusted_end_idx
             ]
 
-            # split_text = []
-            # current_text = []
-            # for token, pos, idx in tokens_in_match:
-            #     if pos in split_pos:
-            #         # split_pos 토큰을 기준으로 분할, 기준 토큰은 제외
-            #         joined_text = " ".join(current_text).strip()
-            #         if joined_text:
-            #             extracted_texts.append(joined_text)
-            #         current_text = []
-            #     else:
-            #         if token.strip():
-            #             current_text.append(token.strip())
-
-            # # 마지막 분할된 텍스트가 남아있다면 추가
-            # joined_text = " ".join(current_text).strip()
-            # if joined_text:
-            #     extracted_texts.append(joined_text)
-                
-            # # start_idx를 갱신하여 다음 매칭부터 이어서 검사
-            # start_idx = adjusted_end_idx
             filtered_tokens = []
             for token, pos, idx in tokens_in_match:
-                if pos not in removed_pos:  # 제거할 POS가 아닌 경우
-                    filtered_tokens.append(token.strip())  # 공백 제거 후 추가
+                if pos not in removed_pos:  # not a pos for elemination
+                    filtered_tokens.append(token.strip())  
             
-            # 결과를 텍스트로 합쳐서 저장
+            # store result with agrregate text
             if filtered_tokens:
-                filtered_text = " ".join(filtered_tokens)  # 토큰들을 연결
+                filtered_text = " ".join(filtered_tokens)  # concat tokens
                 extracted_texts.append(filtered_text)
 
-            # start_idx를 갱신하여 다음 매칭부터 이어서 검사
+            # update start_idx and start with next matching
             start_idx = adjusted_end_idx
 
-    # 마지막 엔티티와 문장 끝
+    # last entity and last sentence
     if entities:
         last_entity = entities[-1].lower()
         end_pattern = re.escape(last_entity) + r"(.*?)$"
@@ -181,8 +158,6 @@ def extract_text_between_entities(sentence, entities):
             if filtered_end:
                 extracted_texts.append(" ".join(filtered_end))
                   
-
-    # 탭 구분자를 넣고 문자열로 반환
     return "\t".join(extracted_texts)
 
 def transform_data(data, entity_dict, relations_dict):
@@ -194,21 +169,18 @@ def transform_data(data, entity_dict, relations_dict):
         r = r.strip()
         e2 = e2.strip()
 
-        e1_num = int(re.search(r'\d+', e1).group())  # e1에서 숫자 추출
-        r_num = int(re.search(r'\d+', r).group())    # r에서 숫자 추출
-        e2_num = int(re.search(r'\d+', e2).group())  # e2에서 숫자 추출
+        e1_num = int(re.search(r'\d+', e1).group())  # e1 for extract number
+        r_num = int(re.search(r'\d+', r).group())    # r for extract number
+        e2_num = int(re.search(r'\d+', e2).group())  # e2 for extract number
 
-        # 여기서 만약에 숫자 순서가 다르면 맞춰주기
         if e2_num < e1_num:
             e1_num, e2_num = e2_num, e1_num
-
 
         transformed = f"{entity_dict[e1_num]} || {relations_dict[r_num]} || {entity_dict[e2_num]}"
 
         result.append(transformed)
 
       except (ValueError, KeyError):
-          # 잘못된 형식이거나 매핑되지 않는 값이 있는 경우 건너뜀
           continue
     return "\n".join(result)
 
@@ -222,8 +194,6 @@ def relation_extract_between_entities(question, entity_dict):
     formatted_entities = "\t".join([f"{v}: e{k}" for k, v in entity_dict.items()])
 
     relations = relations_extract(question, formatted_entities, formatted_relations)
-
-    # real_relations = transform_data(relations, entity_dict, relations_dict)
 
     return relations_dict, relations
 

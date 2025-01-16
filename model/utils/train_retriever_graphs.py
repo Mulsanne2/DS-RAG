@@ -1,7 +1,7 @@
 import torch
 from torch.utils.data import Dataset
 
-PATH = '/dataset/comparison/train'
+PATH = '/dataset/rankingqa/train'
 
 class RetriveTrainGraphsDataset(Dataset):
     def __init__(self):

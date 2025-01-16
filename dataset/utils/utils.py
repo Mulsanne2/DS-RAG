@@ -113,8 +113,6 @@ def compose_entity_dict_v2(entities, question):
     for i, token in enumerate(question_tokens):
         for entity, entity_tok in zip(splitted_entities, entities_tokens):
             # Check if the current token matches the first token of the entity
-            # token과 entity_tok을 비교할 때, 특수문자 제거, 저장할 때는 원래 형태로 저장
-            # 왜 비교가 제대로 안되는지 찾아야 함
 
             if clean_token(entity_tok[0]) == clean_token(token):
                 match_length = 1  # At least one token matches
@@ -130,16 +128,14 @@ def compose_entity_dict_v2(entities, question):
                         return re.sub(r"^[^\w]+|[^\w]+$", "", token).strip()
                     matched_entities.append((first_last_clean(entity), i, match_length))
     
-    # 위치, 길이 순서로 우선순위
     matched_entities.sort(key=lambda x: (x[1], -x[2]))
 
     entity_dict = {}
     unique_matched = {}
 
     for entity, index, length in matched_entities:
-        # 동일한 인덱스가 이미 존재하면 길이 비교
         if index in unique_matched:
-            if length > unique_matched[index][1]:  # 더 긴 match_length를 우선
+            if length > unique_matched[index][1]:  
                 unique_matched[index] = (entity, length)
         else:
             unique_matched[index] = (entity, length)
@@ -147,31 +143,26 @@ def compose_entity_dict_v2(entities, question):
     filtered_data = {}
     for index, (entity, length) in sorted(unique_matched.items()):
         current_range = range(index, index + length)
-        # 포함 여부 확인
+        # check if contains element
         if any(
             range(existing_index, existing_index + existing_length).start <= current_range.start and
             range(existing_index, existing_index + existing_length).stop >= current_range.stop
             for existing_index, (_, existing_length) in filtered_data.items()
         ):
-            continue  # 현재 항목은 포함되므로 추가하지 않음
+            continue  
         filtered_data[index] = (entity, length)
 
-
-    # 정렬된 순서로 entity_dict 생성
     for idx, (index, (entity, _)) in enumerate(sorted(filtered_data.items())):
         entity_dict[idx] = entity
-    
-    
-    # 끝까지 매칭되지 않은 entity가 있다면 그냥 무시 - 여기서는 변화되는 비율이 적기 때문
 
     return entity_dict
 
 
 def convert_rener(entities, relations):
-    # 엔티티 추출
+    # extract entity
     entities = [item.strip() for item in entities.split("\t")]
 
-    # 관계 추출
+    # extract relation
     extracted_relations = []
     lines = relations.splitlines()
     for line in lines:
@@ -191,19 +182,15 @@ def convert_rener(entities, relations):
 
 
 def is_interrogative_word(word):
-    # 의문사 리스트 정의
     interrogative_words = {"what", "when", "which", "who", "whom", "whose", "why", "where", "how"}
-    
-    # 소문자로 변환 후 검사
     return word.lower() in interrogative_words
 
 
 
 def find_best_match(new_entity, unique_entities, similarity_threshold=80):
-    included_entities = []  # 포함된 엔티티를 저장할 리스트
+    included_entities = []  
 
     for existing_entity in unique_entities:
-        # new_entity가 existing_entity에 포함되거나 그 반대인 경우 저장
         if new_entity in existing_entity or existing_entity in new_entity:
             included_entities.append(existing_entity)
 
@@ -384,82 +371,3 @@ def find_and_remove_cycles_with_nx(graph):
             break
 
     return G
-
-
-# def compose_graph_temp(tripleset_store):
-
-#     G = nx.DiGraph()
-
-#     valid_subject_nodes = set()
-#     valid_object_nodes = set()
-
-#     for triple in tripleset_store.get_triples():
-        
-#         subj = triple["subject"]
-#         obj = triple["object"]
-#         G.add_node(subj, id=triple["subject_id"], sub_query_number=triple["sub_query_number"])
-#         G.add_node(obj, id=triple["object_id"], sub_query_number=triple["sub_query_number"])
-
-#         # Add edge with attributes
-#         G.add_edge(subj, obj, relation=triple["relation"], relation_id=triple["relation_id"], sub_query_number=triple["sub_query_number"])
-
-
-#         valid_subject_nodes.add((triple["subject"], triple["subject_id"], triple["sub_query_number"]))
-#         valid_object_nodes.add((triple["object"], triple["object_id"], triple["sub_query_number"]))
-
-#     """
-#     1. entity 여러번 돌려서 택하기
-#     11. 순환관계를 검사하고 삭제
-#     - 엣지의 수가 가장 많은 노드에 대해 순환관계에서 들어오는 엣지(즉 triple set)을 삭제
-#     12. graph 저장소에 있는 triple set을 json 파일에 저장
-#     13. core 찾아서 명시해서 전송드리기
-#     """
-
-#     weakly_connected = list(nx.weakly_connected_components(G))
-#     subgraph_node_counts = {i: len(sg) for i, sg in enumerate(weakly_connected)}
-#     largest_subgraph_idx = max(subgraph_node_counts, key=subgraph_node_counts.get)
-#     largest_subgraph_nodes = weakly_connected[largest_subgraph_idx]
-
-#     remaining_subgraphs = [sg for i, sg in enumerate(weakly_connected) if i != largest_subgraph_idx]
-
-
-#     def find_closest_node(largest_nodes, subgraph_nodes):
-#         min_diff = float('inf')
-#         closest_pair = None
-
-#         for ln in largest_nodes:
-#             print(ln)
-#             if (ln, G.nodes[ln]['id'], G.nodes[ln]['sub_query_number']) in valid_object_nodes:
-#                 for sn in subgraph_nodes:
-#                     # 동일한 sub_query_number인지 확인
-#                     if G.nodes[ln]['sub_query_number'] == G.nodes[sn]['sub_query_number']:
-#                         diff = abs(G.nodes[ln]['id'] - G.nodes[sn]['id'])
-#                         # 더 가까운 노드 찾기
-#                         if diff < min_diff or (closest_pair is not None and diff == min_diff and G.nodes[sn]['id'] < G.nodes[closest_pair[1]]):
-#                             min_diff = diff
-#                             closest_pair = (ln, sn)
-
-#                     if closest_pair is not None:
-#                         return closest_pair
-                
-#         return closest_pair
-    
-#     for subgraph_nodes in remaining_subgraphs:
-
-#         filtered_nodes = [
-#             n for n in subgraph_nodes
-#             if (n, G.nodes[n]['id'], G.nodes[n]['sub_query_number']) in valid_subject_nodes
-#         ]
-#         # Sort nodes in the subgraph by sub_query_number and node_id
-#         sorted_subgraph_nodes = sorted(filtered_nodes, key=lambda n: (G.nodes[n]['sub_query_number'], G.nodes[n]['id']))
-
-#         # Find the node in largest_subgraph_nodes to connect
-#         closest_pair = find_closest_node(largest_subgraph_nodes, sorted_subgraph_nodes)
-
-#         if closest_pair:
-#             ln, sn = closest_pair
-#             G.add_edge(ln, sn)
-#             largest_subgraph_nodes.update(subgraph_nodes)  # Merge nodes into largest subgraph
-#         else:
-#             # If no connection is possible, remove the subgraph
-#             G.remove_nodes_from(subgraph_nodes)

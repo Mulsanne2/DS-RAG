@@ -8,8 +8,8 @@ from tqdm import tqdm
 os.environ['OPENAI_API_KEY'] = ""
 
 
-before_qd_file = "comparison/comparison_test.json"
-qd_output_path = "comparison/comparison_test_qd.json"  
+before_qd_file = "rankingqa/rankingqa_test.json"
+qd_output_path = "rankingqa/rankingqa_test_qd.json"  
 model = 'gpt-4o'
 
 def split_postprocess(split):

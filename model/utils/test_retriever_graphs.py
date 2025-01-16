@@ -1,7 +1,7 @@
 import torch
 from torch.utils.data import Dataset
 
-PATH = '/dataset/comparison/test'
+PATH = '/dataset/rankingqa/test'
 
 class RetriveTestGraphsDataset(Dataset):
     def __init__(self):

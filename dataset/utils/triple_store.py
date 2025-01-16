@@ -29,5 +29,5 @@ class TripleStore:
         return self.triples
     
     def to_dict(self):
-        # TripleStore를 딕셔너리로 변환
+        # change triple sotre into dictionary
         return {"triples": self.triples}
